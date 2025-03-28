@@ -1,0 +1,17 @@
+{
+  "name": "climbers-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "3.1.9",
+    "ts-node": "10.9.2"
+  },
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "Javier Piqueras",
+  "license": "ISC"
+}
