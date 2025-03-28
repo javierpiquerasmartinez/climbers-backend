@@ -6,6 +6,7 @@
   "type": "module",
   "devDependencies": {
     "nodemon": "3.1.9",
+    "prisma": "6.5.0",
     "ts-node": "10.9.2"
   },
   "scripts": {
@@ -13,5 +14,8 @@
   },
   "keywords": [],
   "author": "Javier Piqueras",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "6.5.0"
+  }
 }
