@@ -188,3 +188,33 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 }
+
+export const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  // Seguridad: asegurarse de que el usuario es dueño de la cuenta
+  if (req.user?.email === undefined) {
+    res.status(401).json({ error: 'No autorizado' });
+    return
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: { email: true }
+    });
+
+    if (!user) res.status(404).json({ error: 'Usuario no encontrado' });
+    if (user.email !== req.user.email) {
+      res.status(403).json({ error: 'No puedes eliminar otra cuenta' });
+      return
+    }
+
+    await prisma.user.delete({ where: { id } });
+
+    res.status(204).send(); // Sin contenido
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    res.status(500).json({ error: 'Error al eliminar usuario' });
+  }
+};

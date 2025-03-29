@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createUser, updateUser, getUsersWithFilters, getUserConversations, getUserProfile, getCurrentUser } from '../controllers/userController';
+import { createUser, updateUser, getUsersWithFilters, getUserConversations, getUserProfile, getCurrentUser, deleteUser } from '../controllers/userController';
 import { verifyGoogleToken } from '../middlewares/verifyGoogleToken';
 
 const router = Router();
@@ -10,6 +10,7 @@ router.get('/', verifyGoogleToken, getUsersWithFilters);
 router.get('/:id/conversations', verifyGoogleToken, getUserConversations);
 router.get('/:id', verifyGoogleToken, getUserProfile);
 router.get('/me', verifyGoogleToken, getCurrentUser);
+router.delete('/:id', verifyGoogleToken, deleteUser);
 
 
 export default router;
