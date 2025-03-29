@@ -83,5 +83,48 @@ export const getUsersWithFilters = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener los usuarios' });
   }
-
 }
+
+export const getUserConversations = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const messages = await prisma.message.findMany({
+      where: {
+        OR: [
+          { senderId: id },
+          { receiverId: id }
+        ]
+      },
+      select: {
+        senderId: true,
+        receiverId: true
+      }
+    });
+
+    const userIds = new Set<string>();
+
+    messages.forEach((msg) => {
+      if (msg.senderId !== id) userIds.add(msg.senderId);
+      if (msg.receiverId !== id) userIds.add(msg.receiverId);
+    });
+
+    const users = await prisma.user.findMany({
+      where: {
+        id: { in: Array.from(userIds) }
+      },
+      select: {
+        id: true,
+        name: true,
+        avatarUrl: true,
+        role: true,
+        location: true
+      }
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error('Error al obtener conversaciones:', error);
+    res.status(500).json({ error: 'Error al obtener conversaciones' });
+  }
+};
