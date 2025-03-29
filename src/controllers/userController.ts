@@ -128,3 +128,40 @@ export const getUserConversations = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al obtener conversaciones' });
   }
 };
+
+export const getUserProfile = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        avatarUrl: true,
+        role: true,
+        location: true,
+        climbingStyles: true,
+        level: true,
+        createdAt: true
+      }
+    });
+
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const rating = await prisma.review.aggregate({
+      where: { targetId: id },
+      _avg: { rating: true },
+      _count: { rating: true }
+    });
+
+    res.json({
+      ...user,
+      averageRating: rating._avg.rating,
+      totalReviews: rating._count.rating
+    });
+  } catch (error) {
+    console.error('Error al obtener perfil de usuario:', error);
+    res.status(500).json({ error: 'Error al obtener perfil de usuario' });
+  }
+};
