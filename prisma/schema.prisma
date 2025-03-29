@@ -33,8 +33,8 @@ model Message {
   senderId   String
   receiverId String
 
-  sender   User @relation("SentMessages", fields: [senderId], references: [id])
-  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
 }
 
 model Review {
@@ -46,8 +46,8 @@ model Review {
   authorId String
   targetId String
 
-  author User @relation("AuthoredReviews", fields: [authorId], references: [id])
-  target User @relation("ReceivedReviews", fields: [targetId], references: [id])
+  author User @relation("AuthoredReviews", fields: [authorId], references: [id], onDelete: Cascade)
+  target User @relation("ReceivedReviews", fields: [targetId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
