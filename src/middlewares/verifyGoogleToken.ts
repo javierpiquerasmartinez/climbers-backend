@@ -8,6 +8,7 @@ export const verifyGoogleToken = async (req: Request, res: Response, next: NextF
 
   if (!authHeader?.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Token no proporcionado' });
+    return
   }
 
   const token = authHeader.split(' ')[1];
@@ -21,6 +22,7 @@ export const verifyGoogleToken = async (req: Request, res: Response, next: NextF
     const payload = ticket.getPayload();
     if (!payload || !payload.email) {
       res.status(401).json({ error: 'Token inválido' });
+      return
     }
 
     // Adjunta el email (u otros datos) al request

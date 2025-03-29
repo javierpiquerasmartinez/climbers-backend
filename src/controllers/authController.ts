@@ -9,6 +9,7 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
 
   if (!token) {
     res.status(400).json({ error: 'Token no proporcionado' });
+    return
   }
 
   try {
@@ -18,12 +19,16 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
     });
 
     const payload = ticket.getPayload();
-    if (!payload) return res.status(401).json({ error: 'Token inválido' });
+    if (!payload) {
+      res.status(401).json({ error: 'Token inválido' });
+      return
+    }
 
     const { email, name, picture } = payload;
 
     if (!email || !name) {
       res.status(400).json({ error: 'Datos de usuario incompletos' });
+      return
     }
 
     let user = await prisma.user.findUnique({ where: { email } });

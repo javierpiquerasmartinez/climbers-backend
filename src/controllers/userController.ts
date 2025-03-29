@@ -130,6 +130,7 @@ export const getUserConversations = async (req: Request, res: Response) => {
 };
 
 export const getUserProfile = async (req: Request, res: Response) => {
+
   const { id } = req.params;
 
   try {
@@ -147,7 +148,10 @@ export const getUserProfile = async (req: Request, res: Response) => {
       }
     });
 
-    if (!user) res.status(404).json({ error: 'Usuario no encontrado' });
+    if (!user) {
+      res.status(404).json({ error: 'Usuario no encontrado' });
+      return
+    }
 
     const rating = await prisma.review.aggregate({
       where: { targetId: id },
@@ -167,10 +171,12 @@ export const getUserProfile = async (req: Request, res: Response) => {
 };
 
 export const getCurrentUser = async (req: Request, res: Response) => {
+
   const email = req.user?.email;
 
   if (!email) {
     res.status(401).json({ error: 'No autenticado' });
+    return
   }
 
   try {
@@ -180,6 +186,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
     if (!user) {
       res.status(404).json({ error: 'Usuario no encontrado' });
+      return
     }
 
     res.json(user);
