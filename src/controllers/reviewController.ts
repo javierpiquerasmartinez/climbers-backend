@@ -5,7 +5,7 @@ export const createReview = async (req: Request, res: Response) => {
   const { authorId, targetId, rating, comment } = req.body;
 
   if (!authorId || !targetId || !rating) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+    res.status(400).json({ error: 'Faltan datos obligatorios' });
   }
 
   try {

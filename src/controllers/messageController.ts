@@ -5,7 +5,8 @@ export const sendMessage = async (req: Request, res: Response) => {
   const { senderId, receiverId, content } = req.body;
 
   if (!senderId || !receiverId || !content) {
-    return res.status(400).json({ error: 'Datos incompletos' });
+    res.status(400).json({ error: 'Datos incompletos' });
+    return
   }
 
   try {
@@ -28,7 +29,8 @@ export const getConversation = async (req: Request, res: Response) => {
   const { user1, user2 } = req.query;
 
   if (!user1 || !user2 || typeof user1 !== 'string' || typeof user2 !== 'string') {
-    return res.status(400).json({ error: 'IDs de usuarios requeridos' });
+    res.status(400).json({ error: 'IDs de usuarios requeridos' });
+    return
   }
 
   try {

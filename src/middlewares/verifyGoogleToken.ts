@@ -7,7 +7,7 @@ export const verifyGoogleToken = async (req: Request, res: Response, next: NextF
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Token no proporcionado' });
+    res.status(401).json({ error: 'Token no proporcionado' });
   }
 
   const token = authHeader.split(' ')[1];
@@ -20,7 +20,7 @@ export const verifyGoogleToken = async (req: Request, res: Response, next: NextF
 
     const payload = ticket.getPayload();
     if (!payload || !payload.email) {
-      return res.status(401).json({ error: 'Token inválido' });
+      res.status(401).json({ error: 'Token inválido' });
     }
 
     // Adjunta el email (u otros datos) al request
@@ -33,6 +33,6 @@ export const verifyGoogleToken = async (req: Request, res: Response, next: NextF
     next();
   } catch (error) {
     console.error('Error al verificar token:', error);
-    return res.status(401).json({ error: 'Token inválido o expirado' });
+    res.status(401).json({ error: 'Token inválido o expirado' });
   }
 };

@@ -5,6 +5,6 @@ import { verifyGoogleToken } from '../middlewares/verifyGoogleToken';
 const router = Router();
 
 router.post('/', verifyGoogleToken, sendMessage);
-router.get('/', , verifyGoogleToken, getConversation);
+router.get('/', verifyGoogleToken, getConversation);
 
 export default router;

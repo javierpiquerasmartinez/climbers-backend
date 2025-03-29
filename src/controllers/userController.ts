@@ -147,7 +147,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
       }
     });
 
-    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+    if (!user) res.status(404).json({ error: 'Usuario no encontrado' });
 
     const rating = await prisma.review.aggregate({
       where: { targetId: id },
@@ -165,3 +165,26 @@ export const getUserProfile = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al obtener perfil de usuario' });
   }
 };
+
+export const getCurrentUser = async (req: Request, res: Response) => {
+  const email = req.user?.email;
+
+  if (!email) {
+    res.status(401).json({ error: 'No autenticado' });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error al obtener el usuario actual:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}

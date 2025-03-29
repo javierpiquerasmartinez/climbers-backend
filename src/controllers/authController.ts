@@ -8,7 +8,7 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
   const { token } = req.body;
 
   if (!token) {
-    return res.status(400).json({ error: 'Token no proporcionado' });
+    res.status(400).json({ error: 'Token no proporcionado' });
   }
 
   try {
@@ -23,7 +23,7 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
     const { email, name, picture } = payload;
 
     if (!email || !name) {
-      return res.status(400).json({ error: 'Datos de usuario incompletos' });
+      res.status(400).json({ error: 'Datos de usuario incompletos' });
     }
 
     let user = await prisma.user.findUnique({ where: { email } });
