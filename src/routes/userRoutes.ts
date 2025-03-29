@@ -6,7 +6,7 @@ const router = Router();
 
 router.post('/', verifyGoogleToken, createUser);
 router.patch('/:id', verifyGoogleToken, updateUser);
-router.get('/', getUsersWithFilters);
+router.get('/', verifyGoogleToken, getUsersWithFilters);
 router.get('/:id/conversations', verifyGoogleToken, getUserConversations);
 router.get('/me', verifyGoogleToken, getCurrentUser);
 router.get('/:id', verifyGoogleToken, getUserProfile);
