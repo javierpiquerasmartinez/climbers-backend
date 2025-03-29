@@ -6,10 +6,10 @@ const router = Router();
 
 router.post('/', verifyGoogleToken, createUser);
 router.patch('/:id', verifyGoogleToken, updateUser);
-router.get('/', verifyGoogleToken, getUsersWithFilters);
+router.get('/', getUsersWithFilters);
 router.get('/:id/conversations', verifyGoogleToken, getUserConversations);
-router.get('/:id', verifyGoogleToken, getUserProfile);
 router.get('/me', verifyGoogleToken, getCurrentUser);
+router.get('/:id', verifyGoogleToken, getUserProfile);
 router.delete('/:id', verifyGoogleToken, deleteUser);
 
 
