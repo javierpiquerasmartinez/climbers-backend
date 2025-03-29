@@ -49,3 +49,29 @@ export const getReviewsForUser = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al obtener reviews' });
   }
 };
+
+export const getAverageRatingForUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const result = await prisma.review.aggregate({
+      where: {
+        targetId: id
+      },
+      _avg: {
+        rating: true
+      },
+      _count: {
+        rating: true
+      }
+    });
+
+    res.json({
+      averageRating: result._avg.rating,
+      totalReviews: result._count.rating
+    });
+  } catch (error) {
+    console.error('Error al calcular media de valoraciones:', error);
+    res.status(500).json({ error: 'Error al calcular media de valoraciones' });
+  }
+};
