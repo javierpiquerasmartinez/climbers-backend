@@ -9,7 +9,25 @@ export const createReview = async (req: Request, res: Response) => {
     return
   }
 
+  if (authorId === targetId) {
+    res.status(400).json({ error: 'No puedes valorarte a ti mismo' });
+    return;
+  }
+
+  // Check if the author has already reviewed the target
   try {
+    const existingReview = await prisma.review.findFirst({
+      where: {
+        authorId,
+        targetId
+      }
+    })
+
+    if (existingReview) {
+      res.status(400).json({ error: 'Ya has valorado a este usuario' });
+      return;
+    }
+
     const review = await prisma.review.create({
       data: {
         authorId,
