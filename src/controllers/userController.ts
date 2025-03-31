@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../prisma/client';
 import { Prisma } from '@prisma/client';
+import cloudinary from '../lib/cloudinary.js';
 
 export const createUser = async (req: Request, res: Response) => {
   const { name, email, role, climbingStyles, location, level, avatarUrl } = req.body;
@@ -244,5 +245,45 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error al eliminar usuario:', error);
     res.status(500).json({ error: 'Error al eliminar usuario' });
+  }
+};
+
+export const updateAvatar = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const file = req.file;
+
+  if (!file) {
+    res.status(400).json({ error: 'No se ha enviado ninguna imagen' });
+    return
+  }
+
+  try {
+    const streamUpload = () =>
+      new Promise<string>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'climbers/avatars',
+            public_id: `user-${id}`,
+            overwrite: true
+          },
+          (error, result) => {
+            if (error || !result) return reject(error || new Error('Error en Cloudinary'));
+            resolve(result.secure_url);
+          }
+        );
+        stream.end(file.buffer);
+      });
+
+    const avatarUrl = await streamUpload();
+
+    await prisma.user.update({
+      where: { id },
+      data: { avatarUrl }
+    });
+
+    res.status(200).json({ avatarUrl });
+  } catch (err) {
+    console.error('Error al subir avatar:', err);
+    res.status(500).json({ error: 'Error al subir avatar' });
   }
 };
