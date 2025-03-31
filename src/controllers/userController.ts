@@ -96,23 +96,28 @@ export const getUserConversations = async (req: Request, res: Response) => {
           { receiverId: id }
         ]
       },
-      select: {
-        senderId: true,
-        receiverId: true
+      orderBy: {
+        createdAt: 'desc'
       }
     });
 
-    const userIds = new Set<string>();
+    const userMap = new Map<string, { userId: string; lastMessage: string; lastDate: Date }>();
 
-    messages.forEach((msg) => {
-      if (msg.senderId !== id) userIds.add(msg.senderId);
-      if (msg.receiverId !== id) userIds.add(msg.receiverId);
-    });
+    for (const msg of messages) {
+      const otherId = msg.senderId === id ? msg.receiverId : msg.senderId;
+      if (!userMap.has(otherId)) {
+        userMap.set(otherId, {
+          userId: otherId,
+          lastMessage: msg.content,
+          lastDate: msg.createdAt
+        });
+      }
+    }
+
+    const userIds = Array.from(userMap.keys());
 
     const users = await prisma.user.findMany({
-      where: {
-        id: { in: Array.from(userIds) }
-      },
+      where: { id: { in: userIds } },
       select: {
         id: true,
         name: true,
@@ -122,7 +127,20 @@ export const getUserConversations = async (req: Request, res: Response) => {
       }
     });
 
-    res.json(users);
+    // Enlazar users con sus últimos mensajes
+    const enriched = users.map(user => {
+      const meta = userMap.get(user.id);
+      return {
+        ...user,
+        lastMessage: meta?.lastMessage,
+        lastDate: meta?.lastDate
+      };
+    });
+
+    // Ordenar por fecha descendente
+    enriched.sort((a, b) => (b.lastDate?.getTime() || 0) - (a.lastDate?.getTime() || 0));
+
+    res.json(enriched);
   } catch (error) {
     console.error('Error al obtener conversaciones:', error);
     res.status(500).json({ error: 'Error al obtener conversaciones' });
