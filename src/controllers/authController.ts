@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import prisma from '../prisma/client.js';
+import axios from 'axios';
+import path from 'path';
+import fs from 'fs';
+import cloudinary from '../lib/cloudinary.js';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -43,6 +47,16 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
           climbingStyles: [],
         }
       });
+
+      if (picture) {
+        const avatarUrl = await downloadAndUploadAvatar(picture, user.id);
+
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: { avatarUrl }
+        });
+      }
+
     }
 
     res.status(200).json(user);
@@ -51,3 +65,35 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
     res.status(401).json({ error: 'Token inválido o expirado' });
   }
 };
+
+async function downloadAndUploadAvatar(url: string, userId: string): Promise<string> {
+  const response = await axios.get(url, { responseType: 'arraybuffer' });
+
+  const uploadRes = await cloudinary.uploader.upload_stream({
+    folder: 'climbers/avatars',
+    public_id: `user-${userId}`,
+    overwrite: true
+  }, (error, result) => {
+    if (error || !result) throw new Error('Error al subir imagen a Cloudinary');
+    return result.secure_url;
+  });
+
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'climbers/avatars',
+        public_id: `user-${userId}`,
+        overwrite: true
+      },
+      (error, result) => {
+        if (error || !result) {
+          reject(error || new Error('Error al subir imagen'));
+        } else {
+          resolve(result.secure_url);
+        }
+      }
+    );
+
+    stream.end(response.data);
+  });
+}
