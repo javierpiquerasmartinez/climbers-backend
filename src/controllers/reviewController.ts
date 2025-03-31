@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma/client';
+import prisma from '../prisma/client.js';
 
 export const createReview = async (req: Request, res: Response) => {
   const { authorId, targetId, rating, comment } = req.body;
