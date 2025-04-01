@@ -12,8 +12,7 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src",
-    "tests/prisma/prepareTestDb.ts"
+    "src"
   ],
   "exclude": [
     "node_modules"
