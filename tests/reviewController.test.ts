@@ -37,7 +37,7 @@ describe('createReview', () => {
     ]);
   });
 
-  it('crea una review correctamente', async () => {
+  it('creates a review successfully', async () => {
     const req: any = {
       body: {
         authorId: author.id,
@@ -58,7 +58,7 @@ describe('createReview', () => {
     }));
   });
 
-  it('devuelve error si faltan datos', async () => {
+  it('error when missing data', async () => {
     const req: any = { body: { authorId: author.id } };
     const res = mockResponse();
 
@@ -68,7 +68,7 @@ describe('createReview', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'Faltan datos obligatorios' });
   });
 
-  it('devuelve error si el autor se valora a sí mismo', async () => {
+  it('error when an actor is reviewing himself', async () => {
     const req: any = {
       body: {
         authorId: author.id,
@@ -84,7 +84,7 @@ describe('createReview', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'No puedes valorarte a ti mismo' });
   });
 
-  it('devuelve error si ya ha valorado al mismo usuario', async () => {
+  it('error when the user has already been reviewed by the user', async () => {
     await prismaTestClient.review.create({
       data: {
         authorId: author.id,
@@ -148,7 +148,7 @@ describe('getReviewsForUser', () => {
     });
   });
 
-  it('devuelve las reviews para un usuario', async () => {
+  it('return the user reviews', async () => {
     const req: any = { params: { id: target.id } };
     const res = mockResponse();
 
@@ -213,7 +213,7 @@ describe('getAverageRatingForUser', () => {
     });
   });
 
-  it('calcula media y número de valoraciones', async () => {
+  it('returns the average review rate and the number of reviews', async () => {
     const req: any = { params: { id: user1.id } };
     const res = mockResponse();
 
