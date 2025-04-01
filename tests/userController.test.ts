@@ -1,6 +1,8 @@
 import { createUser } from './../src/controllers/userController';
 import { Request, Response } from 'express';
 import prisma from './prisma/prismaTestClient';
+import { clear } from 'console';
+import { clearTestDb } from './prisma/seedTest';
 
 describe('createUser', () => {
   let req: Partial<Request>;
@@ -16,7 +18,7 @@ describe('createUser', () => {
     };
 
     // Limpia la base de datos antes de cada prueba
-    await prisma.user.deleteMany();
+    clearTestDb();
   });
 
   it('debería crear un usuario y devolver un código 201', async () => {
