@@ -1,4 +1,3 @@
-
 import { createUser, getUsersWithFilters, updateUser, getUserConversations, getUserProfile, getCurrentUser, deleteUser } from './../src/controllers/userController';
 import prismaTestClient from './prisma/prismaTestClient';
 import { mockResponse } from './utils/mockResponse';
@@ -10,7 +9,7 @@ beforeEach(async () => {
 
 
 describe('User creation', () => {
-  it('Success creation', async () => {
+  it('Successful creation', async () => {
     const req: any = {
       body: {
         name: 'Javi',
@@ -33,7 +32,7 @@ describe('User creation', () => {
     }));
   });
 
-  it('Error creating user - unvalid request body', async () => {
+  it('Error creating user - invalid request body', async () => {
     const req: any = { body: {} };
     const res = mockResponse();
 
@@ -62,7 +61,7 @@ describe('User update', () => {
     });
   });
 
-  it('actualiza un usuario existente', async () => {
+  it('updates an existing user', async () => {
     const req: any = {
       params: { id: user.id },
       body: {
@@ -127,7 +126,7 @@ describe('Get users based on filters', () => {
     );
   });
 
-  it('Void request when there is no match', async () => {
+  it('Empty response when there is no match', async () => {
     const req: any = {
       query: {
         role: 'anfitrión',
@@ -181,7 +180,7 @@ describe('getUserConversations', () => {
     });
   });
 
-  it('devuelve las conversaciones del usuario', async () => {
+  it('returns the user conversations', async () => {
     const req: any = { params: { id: userA.id } };
     const res = mockResponse();
 
@@ -248,7 +247,7 @@ describe('getUserProfile', () => {
     });
   });
 
-  it('devuelve el perfil del usuario con puntuación media', async () => {
+  it('returns the user profile with average rating', async () => {
     const req: any = { params: { id: user1.id } };
     const res = mockResponse();
 
@@ -263,7 +262,7 @@ describe('getUserProfile', () => {
     );
   });
 
-  it('devuelve 404 si no existe el usuario', async () => {
+  it('returns 404 if the user does not exist', async () => {
     const req: any = { params: { id: 'non-existent-id' } };
     const res = mockResponse();
 
@@ -292,7 +291,7 @@ describe('getCurrentUser', () => {
   });
 
 
-  it('devuelve el usuario actual si está autenticado', async () => {
+  it('returns the current user if authenticated', async () => {
     const req: any = { user: { email: user.email } };
     const res = mockResponse();
 
@@ -301,7 +300,7 @@ describe('getCurrentUser', () => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ email: user.email }));
   });
 
-  it('devuelve 401 si no hay email en el token', async () => {
+  it('returns 401 if there is no email in the token', async () => {
     const req: any = { user: {} };
     const res = mockResponse();
 
@@ -329,7 +328,7 @@ describe('deleteUser', () => {
     });
   });
 
-  it('elimina el usuario si es dueño del perfil', async () => {
+  it('deletes the user if they own the profile', async () => {
     const req: any = {
       params: { id: user.id },
       user: { email: user.email }
@@ -343,7 +342,7 @@ describe('deleteUser', () => {
     expect(res.status).toHaveBeenCalledWith(204);
   });
 
-  it('devuelve 403 si otro usuario intenta eliminar', async () => {
+  it('returns 403 if another user tries to delete', async () => {
     const req: any = {
       params: { id: user.id },
       user: { email: 'otro@test.com' }
