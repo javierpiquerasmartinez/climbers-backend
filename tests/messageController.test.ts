@@ -37,7 +37,7 @@ describe('sendMessage', () => {
     ]);
   });
 
-  it('envía un mensaje correctamente', async () => {
+  it('sends a message successfully', async () => {
     const req: any = {
       body: {
         senderId: sender.id,
@@ -57,7 +57,7 @@ describe('sendMessage', () => {
     }));
   });
 
-  it('devuelve error si faltan datos', async () => {
+  it('returns an error if data is missing', async () => {
     const req: any = { body: { senderId: sender.id } };
     const res = mockResponse();
 
@@ -115,7 +115,7 @@ describe('getConversation', () => {
     });
   });
 
-  it('devuelve la conversación ordenada por fecha', async () => {
+  it('returns the conversation sorted by date', async () => {
     const req: any = {
       query: {
         user1: user1.id,
@@ -133,7 +133,7 @@ describe('getConversation', () => {
     ]);
   });
 
-  it('devuelve error si faltan user1 o user2', async () => {
+  it('returns an error if user1 or user2 is missing', async () => {
     const req: any = {
       query: { user1: user1.id }
     };
