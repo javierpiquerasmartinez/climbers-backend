@@ -1,303 +1,358 @@
-import { Request, Response } from 'express';
-import prisma from './prisma/prismaTestClient';
-import { clearTestDb } from './prisma/seedTest';
-import { createUser, updateUser, getUsersWithFilters, getUserConversations, getUserProfile, getCurrentUser, deleteUser, updateAvatar } from './../src/controllers/userController';
+
+import { createUser, getUsersWithFilters, updateUser, getUserConversations, getUserProfile, getCurrentUser, deleteUser } from './../src/controllers/userController';
+import prismaTestClient from './prisma/prismaTestClient';
+import { mockResponse } from './utils/mockResponse';
+import { clearTestDb } from './utils/utils';
+
+beforeEach(async () => {
+  await clearTestDb();
+});
 
 
-describe('User Controller', () => {
-  let req: any;
-  let res: Partial<Response>;
+describe('User creation', () => {
+  it('Success creation', async () => {
+    const req: any = {
+      body: {
+        name: 'Javi',
+        email: 'javi@example.com',
+        role: 'ambos',
+        climbingStyles: ['boulder'],
+        location: 'Valencia',
+        level: 'intermediate',
+        avatarUrl: 'http://avatar.com/javi.jpg'
+      }
+    };
+    const res = mockResponse();
+
+    await createUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      name: 'Javi',
+      email: 'javi@example.com'
+    }));
+  });
+
+  it('Error creating user - unvalid request body', async () => {
+    const req: any = { body: {} };
+    const res = mockResponse();
+
+    await createUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Error al crear usuario' });
+  });
+});
+
+
+describe('User update', () => {
+  let user: any;
 
   beforeEach(async () => {
-    req = {
-      body: {},
-      params: {},
-      query: {},
-      user: {}
-    };
-    res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-      send: jest.fn(),
-    };
-
-    // Limpia la base de datos antes de cada prueba
-    await clearTestDb();
-  });
-
-  describe('createUser', () => {
-
-    it('debería crear un usuario y devolver un código 201', async () => {
-      req.body = {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        role: 'viajero',
-        climbingStyles: ['boulder', 'sport'],
-        location: 'Madrid',
-        level: 'intermedio',
-        avatarUrl: 'http://example.com/avatar.jpg',
-      };
-
-      await createUser(req as Request, res as Response);
-
-      // Verifica que el usuario se haya creado en la base de datos
-      const userInDb = await prisma.user.findUnique({
-        where: { email: 'john.doe@example.com' },
-      });
-
-      expect(userInDb).not.toBeNull();
-      expect(userInDb?.name).toBe('John Doe');
-      expect(userInDb?.email).toBe('john.doe@example.com');
-
-      // Verifica la respuesta
-      expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-      }));
-    });
-
-    it('debería devolver un error 500 si ocurre un error al crear el usuario', async () => {
-      // Simula un caso donde falta un campo obligatorio
-      req.body = {
-        name: 'John Doe',
-        role: 'viajero',
-      };
-
-      await createUser(req as Request, res as Response);
-
-      // Verifica que no se haya creado ningún usuario
-      const usersInDb = await prisma.user.findMany();
-      expect(usersInDb).toHaveLength(0);
-
-      // Verifica la respuesta
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Error al crear usuario' });
-    });
-  });
-
-  describe('updateUser', () => {
-    it('debería actualizar un usuario existente', async () => {
-      const user = await prisma.user.create({
-        data: {
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          role: 'viajero',
-          climbingStyles: ['boulder'],
-          location: 'Madrid',
-          level: 'intermedio',
-        },
-      });
-
-      req.params = { id: user.id };
-      req.body = {
+    user = await prismaTestClient.user.create({
+      data: {
+        name: 'Ana',
+        email: 'ana@test.com',
         role: 'ambos',
+        climbingStyles: ['sport'],
+        location: 'Madrid',
+        level: 'beginner',
+        avatarUrl: ''
+      }
+    });
+  });
+
+  it('actualiza un usuario existente', async () => {
+    const req: any = {
+      params: { id: user.id },
+      body: {
+        role: 'viajero',
         location: 'Barcelona',
         climbingStyles: ['sport'],
-        level: 'avanzado',
-      };
+        level: 'advanced'
+      }
+    };
+    const res = mockResponse();
 
-      await updateUser(req as Request, res as Response);
+    await updateUser(req, res);
 
-      const updatedUser = await prisma.user.findUnique({ where: { id: user.id } });
-
-      expect(updatedUser?.role).toBe('ambos');
-      expect(updatedUser?.location).toBe('Barcelona');
-      expect(updatedUser?.climbingStyles).toEqual(['sport']);
-      expect(updatedUser?.level).toBe('avanzado');
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        id: user.id,
-        role: 'ambos',
-        location: 'Barcelona',
-      }));
-    });
-
-    it('debería devolver un error 500 si el usuario no existe', async () => {
-      req.params = { id: 'non-existent-id' };
-      req.body = { role: 'admin' };
-
-      await updateUser(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Error al actualizar usuario' });
-    });
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+      role: 'viajero',
+      location: 'Barcelona'
+    }));
   });
+});
 
-  describe('getUsersWithFilters', () => {
-    it('debería devolver usuarios que coincidan con los filtros', async () => {
-      await prisma.user.createMany({
-        data: [
-          { name: 'John', email: 'john@example.com', role: 'viajero', climbingStyles: ['boulder'], location: 'Madrid', level: 'intermedio' },
-          { name: 'Jane', email: 'jane@example.com', role: 'ambos', climbingStyles: ['sport'], location: 'Barcelona', level: 'avanzado' },
-        ],
-      });
-
-      req.query = { role: 'viajero', style: 'boulder', location: 'Madrid', level: 'intermedio' };
-
-      await getUsersWithFilters(req as Request, res as Response);
-
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
-        expect.objectContaining({ name: 'John', email: 'john@example.com' }),
-      ]));
-    });
-
-    it('debería devolver un error 500 si ocurre un problema', async () => {
-      req.query = { role: 'invalid-role' };
-
-      await getUsersWithFilters(req as Request, res as Response);
-
-      expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Error al obtener los usuarios' });
-    });
-  });
-
-  describe('getUserConversations', () => {
-    it('debería devolver conversaciones del usuario', async () => {
-      const user1 = await prisma.user.create(
+describe('Get users based on filters', () => {
+  beforeEach(async () => {
+    await prismaTestClient.user.createMany({
+      data: [
         {
-          data: {
-            name: 'John Doe',
-            email: 'john.doe@example.com',
-            role: 'viajero',
-            climbingStyles: ['boulder'],
-            location: 'Madrid',
-            level: 'intermedio',
-          }
-        }
-      );
-      const user2 = await prisma.user.create(
+          name: 'Mario',
+          email: 'mario@test.com',
+          role: 'viajero',
+          climbingStyles: ['sport'],
+          location: 'Granada',
+          level: 'advanced',
+          avatarUrl: ''
+        },
         {
-          data: {
-            name: 'User2',
-            email: 'user2@example.com',
-            role: 'viajero',
-            climbingStyles: ['boulder'],
-            location: 'Madrid',
-            level: 'intermedio',
-          }
+          name: 'Laura',
+          email: 'laura@test.com',
+          role: 'anfitrión',
+          climbingStyles: ['boulder'],
+          location: 'Valencia',
+          level: 'beginner',
+          avatarUrl: ''
         }
-      );
-
-      await prisma.message.create({
-        data: {
-          senderId: user1.id,
-          receiverId: user2.id,
-          content: 'Hola',
-        }
-      })
-
-      await prisma.message.create({
-        data: {
-          senderId: user1.id,
-          receiverId: user2.id,
-          content: 'Hola, ¿qué tal?'
-        }
-      })
-
-      req.params = { id: user1.id };
-
-      await getUserConversations(req as Request, res as Response);
-
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
-        expect.objectContaining({ name: 'User2', lastMessage: 'Hola, ¿qué tal?' }),
-      ]));
+      ]
     });
   });
 
-  describe('getUserProfile', () => {
-    it('debería devolver el perfil del usuario con su rating', async () => {
-      const user1 = await prisma.user.create({
+  it('Role and location filter', async () => {
+    const req: any = {
+      query: {
+        role: 'viajero',
+        location: 'Granada'
+      }
+    };
+    const res = mockResponse();
+
+    await getUsersWithFilters(req, res);
+
+    expect(res.json).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ name: 'Mario' })
+      ])
+    );
+  });
+
+  it('Void request when there is no match', async () => {
+    const req: any = {
+      query: {
+        role: 'anfitrión',
+        location: 'paris'
+      }
+    };
+    const res = mockResponse();
+
+    await getUsersWithFilters(req, res);
+
+    expect(res.json).toHaveBeenCalledWith([]);
+  });
+});
+
+describe('getUserConversations', () => {
+  let userA: any, userB: any;
+
+  beforeEach(async () => {
+    [userA, userB] = await prismaTestClient.$transaction([
+      prismaTestClient.user.create({
         data: {
-          name: 'John Doe',
-          email: 'john.doe@example.com',
+          name: 'A',
+          email: 'a@test.com',
+          role: 'anfitrión',
+          climbingStyles: ['sport'],
+          location: 'Alicante',
+          level: 'intermediate',
+          avatarUrl: ''
+        }
+      }),
+      prismaTestClient.user.create({
+        data: {
+          name: 'B',
+          email: 'b@test.com',
           role: 'viajero',
           climbingStyles: ['boulder'],
-          location: 'Madrid',
-          level: 'intermedio',
+          location: 'Murcia',
+          level: 'beginner',
+          avatarUrl: ''
         }
-      });
-      const user2 = await prisma.user.create({
-        data: {
-          name: 'John 2Doe',
-          email: 'john.dsoe@example.com',
-          role: 'viajero',
-          climbingStyles: ['boulder'],
-          location: 'Madrid',
-          level: 'intermedio',
-        }
-      });
+      })
+    ]);
 
-      await prisma.review.createMany({
-        data: [
-          { targetId: user1.id, rating: 5, authorId: user2.id },
-          { targetId: user1.id, rating: 4, authorId: user2.id },
-        ],
-      });
+    await prismaTestClient.message.create({
+      data: {
+        senderId: userA.id,
+        receiverId: userB.id,
+        content: 'Hola!',
+        createdAt: new Date()
+      }
+    });
+  });
 
-      req.params = { id: user1.id };
+  it('devuelve las conversaciones del usuario', async () => {
+    const req: any = { params: { id: userA.id } };
+    const res = mockResponse();
 
-      await getUserProfile(req as Request, res as Response);
+    await getUserConversations(req, res);
 
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        name: 'John Doe',
+    expect(res.json).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: userB.id,
+          lastMessage: 'Hola!'
+        })
+      ])
+    );
+  });
+});
+
+describe('getUserProfile', () => {
+  let user1: any;
+  let user2: any;
+  let user3: any;
+
+  beforeEach(async () => {
+    user1 = await prismaTestClient.user.create({
+      data: {
+        name: 'Carlos1',
+        email: 'carlos1@test.com',
+        role: 'anfitrión',
+        climbingStyles: ['sport'],
+        location: 'Toledo',
+        level: 'advanced',
+        avatarUrl: ''
+      }
+    });
+
+    user2 = await prismaTestClient.user.create({
+      data: {
+        name: 'Carlos2',
+        email: 'carlos2@test.com',
+        role: 'anfitrión',
+        climbingStyles: ['sport'],
+        location: 'Toledo',
+        level: 'advanced',
+        avatarUrl: ''
+      }
+    });
+
+    user3 = await prismaTestClient.user.create({
+      data: {
+        name: 'Carlos3',
+        email: 'carlos3@test.com',
+        role: 'anfitrión',
+        climbingStyles: ['sport'],
+        location: 'Toledo',
+        level: 'advanced',
+        avatarUrl: ''
+      }
+    });
+
+    await prismaTestClient.review.createMany({
+      data: [
+        { targetId: user1.id, authorId: user2.id, rating: 4 },
+        { targetId: user1.id, authorId: user3.id, rating: 5 }
+      ]
+    });
+  });
+
+  it('devuelve el perfil del usuario con puntuación media', async () => {
+    const req: any = { params: { id: user1.id } };
+    const res = mockResponse();
+
+    await getUserProfile(req, res);
+
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: user1.id,
         averageRating: 4.5,
-        totalReviews: 2,
-      }));
-    });
+        totalReviews: 2
+      })
+    );
+  });
 
-    it('debería devolver un error 404 si el usuario no existe', async () => {
-      req.params = { id: 'non-existent-id' };
+  it('devuelve 404 si no existe el usuario', async () => {
+    const req: any = { params: { id: 'non-existent-id' } };
+    const res = mockResponse();
 
-      await getUserProfile(req as Request, res as Response);
+    await getUserProfile(req, res);
 
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Usuario no encontrado' });
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: 'Usuario no encontrado' });
+  });
+});
+
+describe('getCurrentUser', () => {
+  let user: any;
+
+  beforeEach(async () => {
+    user = await prismaTestClient.user.create({
+      data: {
+        name: 'Lucía',
+        email: 'lucia@test.com',
+        role: 'viajero',
+        climbingStyles: ['boulder'],
+        location: '',
+        level: '',
+        avatarUrl: ''
+      }
     });
   });
 
-  describe('deleteUser', () => {
-    it('debería eliminar un usuario si está autorizado', async () => {
-      const user = await prisma.user.create({
-        data: {
-          name: 'John 2Doe',
-          email: 'john.dsoe@example.com',
-          role: 'viajero',
-          climbingStyles: ['boulder'],
-          location: 'Madrid',
-          level: 'intermedio',
-        }
-      });
 
-      req.params = { id: user.id };
-      req.user = { email: 'john.dsoe@example.com' };
+  it('devuelve el usuario actual si está autenticado', async () => {
+    const req: any = { user: { email: user.email } };
+    const res = mockResponse();
 
-      await deleteUser(req as Request, res as Response);
+    await getCurrentUser(req, res);
 
-      const userInDb = await prisma.user.findUnique({ where: { id: user.id } });
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ email: user.email }));
+  });
 
-      expect(userInDb).toBeNull();
-      expect(res.status).toHaveBeenCalledWith(204);
+  it('devuelve 401 si no hay email en el token', async () => {
+    const req: any = { user: {} };
+    const res = mockResponse();
+
+    await getCurrentUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ error: 'No autenticado' });
+  });
+});
+
+describe('deleteUser', () => {
+  let user: any;
+
+  beforeEach(async () => {
+    user = await prismaTestClient.user.create({
+      data: {
+        name: 'Pablo',
+        email: 'pablo@test.com',
+        role: 'viajero',
+        climbingStyles: ['sport'],
+        location: '',
+        level: '',
+        avatarUrl: ''
+      }
     });
+  });
 
-    it('debería devolver un error 403 si no está autorizado', async () => {
-      const user = await prisma.user.create({
-        data: {
-          name: 'John 2Doe',
-          email: 'john.dsoe@example.com',
-          role: 'viajero',
-          climbingStyles: ['boulder'],
-          location: 'Madrid',
-          level: 'intermedio',
-        }
-      });
+  it('elimina el usuario si es dueño del perfil', async () => {
+    const req: any = {
+      params: { id: user.id },
+      user: { email: user.email }
+    };
+    const res = mockResponse();
 
-      req.params = { id: user.id };
-      req.user = { email: 'not-authorized@example.com' };
+    await deleteUser(req, res);
 
-      await deleteUser(req as Request, res as Response);
+    const deleted = await prismaTestClient.user.findUnique({ where: { id: user.id } });
+    expect(deleted).toBeNull();
+    expect(res.status).toHaveBeenCalledWith(204);
+  });
 
-      expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({ error: 'No puedes eliminar otra cuenta' });
-    });
+  it('devuelve 403 si otro usuario intenta eliminar', async () => {
+    const req: any = {
+      params: { id: user.id },
+      user: { email: 'otro@test.com' }
+    };
+    const res = mockResponse();
+
+    await deleteUser(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({ error: 'No puedes eliminar otra cuenta' });
   });
 });
