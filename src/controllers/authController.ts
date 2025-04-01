@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import prisma from '../prisma/client.js';
 import axios from 'axios';
-import path from 'path';
-import fs from 'fs';
 import cloudinary from '../lib/cloudinary.js';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
