@@ -23,6 +23,21 @@ model User {
 
   authoredReviews Review[] @relation("AuthoredReviews")
   receivedReviews Review[] @relation("ReceivedReviews")
+
+  favorites   Favorite[] @relation("Favoriter")
+  favoritedBy Favorite[] @relation("Favorited")
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  favoriteId String
+  createdAt  DateTime @default(now())
+
+  user     User @relation("Favoriter", fields: [userId], references: [id])
+  favorite User @relation("Favorited", fields: [favoriteId], references: [id])
+
+  @@unique([userId, favoriteId])
 }
 
 model Message {
