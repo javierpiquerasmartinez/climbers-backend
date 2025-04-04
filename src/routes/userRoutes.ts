@@ -2,10 +2,12 @@ import { Router } from 'express';
 import { createUser, updateUser, getUsersWithFilters, getUserConversations, getUserProfile, getCurrentUser, deleteUser, updateAvatar } from '../controllers/userController.js';
 import { verifyGoogleToken } from '../middlewares/verifyGoogleToken.js';
 import { upload } from '../middlewares/upload.js';
+import { validate } from '../middlewares/validate.js';
+import { createUserSchema } from '../validators/userSchema.js';
 
 const router = Router();
 
-router.post('/', verifyGoogleToken, createUser);
+router.post('/', verifyGoogleToken, validate(createUserSchema), createUser);
 router.patch('/:id', verifyGoogleToken, updateUser);
 router.get('/', verifyGoogleToken, getUsersWithFilters);
 router.get('/:id/conversations', verifyGoogleToken, getUserConversations);
