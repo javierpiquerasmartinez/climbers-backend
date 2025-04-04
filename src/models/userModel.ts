@@ -215,4 +215,15 @@ export class UserModel {
       throw new Error('Error updating user');
     }
   }
+
+  static async findByEmail(email: string) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { email }
+      });
+      return user;
+    } catch (err) {
+      throw new Error('Error finding user by email');
+    }
+  }
 }
