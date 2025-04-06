@@ -14,7 +14,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const user = await UserModel.updateUser({ id: req.params.id, ...req.params })
+    const user = await userService.updateUser({ id: req.params.id, ...req.body })
     res.json(user);
   } catch (error) {
     res.status(500).json({ error });

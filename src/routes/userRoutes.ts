@@ -3,12 +3,12 @@ import { createUser, updateUser, getUsersWithFilters, getUserConversations, getU
 import { verifyGoogleToken } from '../middlewares/verifyGoogleToken.js';
 import { upload } from '../middlewares/upload.js';
 import { validate } from '../middlewares/validate.js';
-import { createUserSchema } from '../validators/userSchema.js';
+import { createUserSchema, updateUserSchema } from '../validators/userSchema.js';
 
 const router = Router();
 
 router.post('/', verifyGoogleToken, validate(createUserSchema), createUser);
-router.patch('/:id', verifyGoogleToken, updateUser);
+router.patch('/:id', verifyGoogleToken, validate(updateUserSchema), updateUser);
 router.get('/', verifyGoogleToken, getUsersWithFilters);
 router.get('/:id/conversations', verifyGoogleToken, getUserConversations);
 router.get('/me', verifyGoogleToken, getCurrentUser);
