@@ -216,7 +216,7 @@ export class UserModel {
     }
   }
 
-  static async findByEmail(email: string) {
+  static async findByEmail({ email }: any) {
     try {
       const user = await prisma.user.findUnique({
         where: { email }
@@ -224,6 +224,17 @@ export class UserModel {
       return user;
     } catch (err) {
       throw new Error('Error finding user by email');
+    }
+  }
+
+  static async findById({ id }: any) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id }
+      });
+      return user;
+    } catch (err) {
+      throw new Error('Error finding user by id');
     }
   }
 }
