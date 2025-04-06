@@ -1,5 +1,5 @@
-import { UserModel } from '../models/userModel';
-import { CreateUserInput } from '../validators/userSchema';
+import { UserModel } from '../models/userModel.js';
+import { CreateUserInput } from '../validators/userSchema.js';
 
 export const createUser = async (input: CreateUserInput) => {
   const existing = await UserModel.findByEmail(input.email);

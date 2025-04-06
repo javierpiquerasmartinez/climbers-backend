@@ -1,5 +1,5 @@
 import { Prisma, User } from "@prisma/client";
-import prisma from "../prisma/client";
+import prisma from "../prisma/client.js";
 
 export class UserModel {
   static async createUser({ name, email, role, climbingStyles, location, level, avatarUrl }: any) {
