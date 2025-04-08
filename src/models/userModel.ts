@@ -213,7 +213,7 @@ export class UserModel {
       return user;
     }
     catch (err) {
-      throw new Error('Error updating user');
+      throw new Error('Error updating user avatar url');
     }
   }
 
