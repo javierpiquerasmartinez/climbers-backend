@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import cloudinary from '../lib/cloudinary.js';
-import { UserModel } from '../models/userModel.js';
 import { UserService } from '../services/userService.js'
 import { AvatarService } from '../services/avatarService.js';
 
