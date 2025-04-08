@@ -17,6 +17,7 @@ export class UserModel {
       });
       return user;
     } catch (err) {
+      console.log(err)
       throw new Error('Error creating user');
     }
   }
