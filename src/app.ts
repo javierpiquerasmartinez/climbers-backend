@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { devLogger } from './middlewares/devLogger.js';
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(devLogger);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);

@@ -11,14 +11,5 @@ export class HttpError extends Error {
     super(message);
     this.name = new.target.name;
     Error.captureStackTrace(this, new.target);
-
-    logger.error(
-      {
-        statusCode,
-        code,
-        description,
-      },
-      `[HttpError] ${message}`
-    );
   }
 }
