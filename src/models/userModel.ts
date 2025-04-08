@@ -1,5 +1,6 @@
 import { Prisma, User } from "@prisma/client";
 import prisma from "../prisma/client.js";
+import { errors } from "../utils/errors/index.js";
 
 export class UserModel {
   static async createUser({ name, email, role, climbingStyles, location, level, avatarUrl }: any) {
@@ -75,7 +76,7 @@ export class UserModel {
 
       return users;
     } catch (err) {
-      throw new Error('Error filtering users')
+      throw errors.internal('Error getting users with filters');
     }
 
   }

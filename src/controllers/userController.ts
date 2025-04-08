@@ -21,12 +21,8 @@ export const updateUser = async (req: Request, res: Response) => {
 }
 
 export const getUsersWithFilters = async (req: Request, res: Response) => {
-  try {
-    const users = await UserService.getUserWithFilters(req.query);
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener los usuarios' });
-  }
+  const users = await UserService.getUserWithFilters(req.query);
+  res.json(users);
 }
 
 export const getUserConversations = async (req: Request, res: Response) => {

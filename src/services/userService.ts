@@ -1,4 +1,5 @@
 import { UserModel } from '../models/userModel.js';
+import { errors } from '../utils/errors/index.js';
 import { CreateUserInput, DeleteUserInput, UpdateUserInput, UserConversationsInput, UserFiltersInput, UserProfileInput } from '../validators/userSchema.js';
 
 export class UserService {
