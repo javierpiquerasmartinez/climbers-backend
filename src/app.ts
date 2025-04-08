@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 
@@ -21,5 +22,7 @@ app.use('/api/messages', messageRoutes);
 app.get('/', (_req, res) => {
   res.send('Climbers backend funcionando 🎯');
 });
+
+app.use(errorHandler);
 
 export default app;
