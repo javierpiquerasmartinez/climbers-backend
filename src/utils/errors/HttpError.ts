@@ -6,7 +6,7 @@ export class HttpError extends Error {
     public message: string,
     public statusCode: number,
     public code: string,
-    public description?: string
+    public description?: any
   ) {
     super(message);
     this.name = new.target.name;
