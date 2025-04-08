@@ -42,7 +42,7 @@ export const getUserConversations = async (req: Request, res: Response) => {
 export const getUserProfile = async (req: Request, res: Response) => {
 
   try {
-    const userProfile = await UserModel.getUserProfile(req.params);
+    const userProfile = await UserService.getUserProfile({ id: req.params.id });
     res.json(userProfile)
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener perfil de usuario' });

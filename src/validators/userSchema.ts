@@ -26,11 +26,16 @@ export const userFiltersSchema = z.object({
   level: z.string().optional()
 });
 
-export const userConversationsSchema = z.object({
+export const userConversationsRequestSchema = z.object({
+  id: z.string()
+});
+
+export const userProfileRequestSchema = z.object({
   id: z.string()
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 export type UserFiltersInput = z.infer<typeof userFiltersSchema>;
-export type UserConversationsInput = z.infer<typeof userConversationsSchema>;
+export type UserConversationsInput = z.infer<typeof userConversationsRequestSchema>;
+export type UserProfileInput = z.infer<typeof userProfileRequestSchema>;

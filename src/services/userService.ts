@@ -1,5 +1,5 @@
 import { UserModel } from '../models/userModel.js';
-import { CreateUserInput, UpdateUserInput, UserConversationsInput, UserFiltersInput } from '../validators/userSchema.js';
+import { CreateUserInput, UpdateUserInput, UserConversationsInput, UserFiltersInput, UserProfileInput } from '../validators/userSchema.js';
 
 export class UserService {
 
@@ -57,5 +57,13 @@ export class UserService {
       throw new Error('Unauthorized');
     }
     return await UserModel.getCurrentUser({ email: requester.email });
+  }
+
+  static async getUserProfile(input: UserProfileInput) {
+    const user = await UserModel.getUserProfile({ id: input.id });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user;
   }
 }
