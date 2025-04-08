@@ -6,6 +6,7 @@ import { AvatarService } from "./avatarService";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export class AuthService {
+
   static async loginWithGoogle(token: any) {
 
     if (!token) {
