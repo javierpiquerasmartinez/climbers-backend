@@ -1,5 +1,5 @@
 import { UserModel } from '../models/userModel.js';
-import { CreateUserInput, UpdateUserInput } from '../validators/userSchema.js';
+import { CreateUserInput, UpdateUserInput, UserConversationsInput, UserFiltersInput } from '../validators/userSchema.js';
 
 export class UserService {
 
@@ -41,4 +41,13 @@ export class UserService {
     }
     return true;
   }
+
+  static async getUserWithFilters(filters: UserFiltersInput) {
+    return await UserModel.getUserWithFilters(filters);
+  };
+
+  static async getUserConversations(requester: any, input: UserConversationsInput) {
+    await UserService.requesterIsOwner(requester, input);
+    return await UserModel.getUserConversations({ id: input.id });
+  };
 }
