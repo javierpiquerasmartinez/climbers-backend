@@ -3,6 +3,7 @@ import { OAuth2Client } from 'google-auth-library';
 import prisma from '../prisma/client.js';
 import axios from 'axios';
 import cloudinary from '../lib/cloudinary.js';
+import { UserService } from '../services/userService.js';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -36,15 +37,7 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
     let user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email,
-          name,
-          avatarUrl: picture,
-          role: 'viajero', // Por defecto, se puede editar luego
-          climbingStyles: [],
-        }
-      });
+      user = await UserService.createUser({ name, email, avatarUrl: picture });
 
       if (picture) {
         const avatarUrl = await downloadAndUploadAvatar(picture, user.id);

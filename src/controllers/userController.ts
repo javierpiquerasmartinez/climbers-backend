@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import cloudinary from '../lib/cloudinary.js';
 import { UserModel } from '../models/userModel.js';
-import * as userService from '../services/userService.js'
+import { UserService } from '../services/userService.js'
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const user = await userService.createUser(req.body);
+    const user = await UserService.createUser(req.body);
     res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error });
@@ -14,7 +14,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const user = await userService.updateUser({ id: req.params.id, ...req.body })
+    const user = await UserService.updateUser({ id: req.params.id, ...req.body })
     res.json(user);
   } catch (error) {
     res.status(500).json({ error });
