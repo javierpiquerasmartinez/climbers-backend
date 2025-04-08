@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import prisma from '../prisma/client.js';
 import { FavoriteService } from '../services/favoriteService.js';
 
 export const addFavorite = async (req: Request, res: Response) => {
