@@ -1,6 +1,6 @@
-// middlewares/errorHandler.ts
+
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/HttpError';
+import { HttpError } from '../utils/errors/HttpError';
 
 export function errorHandler(err: any, req: Request, res: Response, next: NextFunction): any {
   if (err instanceof HttpError) {
