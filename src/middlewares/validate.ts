@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema } from 'zod';
-import { errors } from '../utils/errors';
+import { errors } from '../utils/errors/index.js';
 
 export const validateBody = (schema: ZodSchema) =>
   (req: Request, res: Response, next: NextFunction) => {

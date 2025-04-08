@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../utils/errors/HttpError';
-import { logger } from '../utils/logger';
+import { HttpError } from '../utils/errors/HttpError.js';
+import { logger } from '../utils/logger.js';
 
 export function errorHandler(err: any, req: Request, res: Response, next: NextFunction): any {
   if (err instanceof HttpError) {
