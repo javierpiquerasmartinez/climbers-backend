@@ -9,7 +9,6 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
     const user = await AuthService.loginWithGoogle(req.body.token);
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error al verificar token:', error);
-    res.status(401).json({ error: 'Token inválido o expirado' });
+    res.status(401).json({ error });
   }
 };
