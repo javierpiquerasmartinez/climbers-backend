@@ -1,3 +1,5 @@
+// utils/errors/HttpError.ts
+import { logger } from '../logger.js';
 
 export class HttpError extends Error {
   constructor(
@@ -10,6 +12,13 @@ export class HttpError extends Error {
     this.name = new.target.name;
     Error.captureStackTrace(this, new.target);
 
-    console.error(`[HttpError] ${statusCode} ${code}: ${message}${description ? ` - ${description}` : ''}`);
+    logger.error(
+      {
+        statusCode,
+        code,
+        description,
+      },
+      `[HttpError] ${message}`
+    );
   }
 }

@@ -1,5 +1,5 @@
 
-import { HttpError } from './HttpError';
+import { HttpError } from './HttpError.js';
 
 export const errors = {
   badRequest: (message = 'Bad request', description?: string) =>
