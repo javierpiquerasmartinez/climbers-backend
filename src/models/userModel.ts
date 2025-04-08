@@ -234,6 +234,7 @@ export class UserModel {
       });
       return user;
     } catch (err) {
+      console.error(err);
       throw new Error('Error finding user by id');
     }
   }

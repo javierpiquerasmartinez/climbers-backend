@@ -14,7 +14,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const user = await UserService.updateUser({ id: req.params.id, ...req.body })
+    const user = await UserService.updateSelf(req.user, { id: req.params.id, ...req.body })
     res.json(user);
   } catch (error) {
     res.status(500).json({ error });
@@ -112,7 +112,7 @@ export const updateAvatar = async (req: Request, res: Response) => {
 
     const avatarUrl = await streamUpload();
 
-    await UserModel.updateUserAvatarUrl({ id, avatarUrl })
+    await UserService.updateUserAvatarUrl(req.user, id, avatarUrl);
 
     res.status(200).json({ avatarUrl });
   } catch (err) {
