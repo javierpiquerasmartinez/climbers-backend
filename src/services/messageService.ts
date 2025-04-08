@@ -1,5 +1,5 @@
-import { MessageModel } from "../models/messageModel";
-import { GetConversationInput, SendMessageInput } from "../validators/messageSchema";
+import { MessageModel } from "../models/messageModel.js";
+import { SendMessageInput } from "../validators/messageSchema.js";
 
 export class MessageService {
   static async sendMessage(input: SendMessageInput) {

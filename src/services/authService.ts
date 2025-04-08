@@ -1,7 +1,7 @@
 import { OAuth2Client } from "google-auth-library";
-import { UserModel } from "../models/userModel";
-import { UserService } from "./userService";
-import { AvatarService } from "./avatarService";
+import { UserModel } from "../models/userModel.js";
+import { UserService } from "./userService.js";
+import { AvatarService } from "./avatarService.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 

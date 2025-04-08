@@ -1,4 +1,4 @@
-import prisma from "../prisma/client";
+import prisma from "../prisma/client.js";
 
 export class MessageModel {
   static async sendMessage({ senderId, receiverId, content }: { senderId: string; receiverId: string; content: string }) {

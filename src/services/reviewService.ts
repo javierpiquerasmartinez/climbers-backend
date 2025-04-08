@@ -1,6 +1,6 @@
-import { ReviewModel } from "../models/reviewModel";
-import { CreateReviewInput, GetUserReviewsInput } from "../validators/reviewSchema";
-import { UserService } from "./userService";
+import { ReviewModel } from "../models/reviewModel.js";
+import { CreateReviewInput, GetUserReviewsInput } from "../validators/reviewSchema.js";
+import { UserService } from "./userService.js";
 
 export class ReviewService {
 
