@@ -7,7 +7,9 @@ export class HttpError extends Error {
     public description?: string
   ) {
     super(message);
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
+    this.name = new.target.name;
+    Error.captureStackTrace(this, new.target);
+
+    console.error(`[HttpError] ${statusCode} ${code}: ${message}${description ? ` - ${description}` : ''}`);
   }
 }
