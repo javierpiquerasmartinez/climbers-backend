@@ -1,5 +1,5 @@
 import { UserModel } from '../models/userModel.js';
-import { CreateUserInput, UpdateUserInput, UserConversationsInput, UserFiltersInput, UserProfileInput } from '../validators/userSchema.js';
+import { CreateUserInput, DeleteUserInput, UpdateUserInput, UserConversationsInput, UserFiltersInput, UserProfileInput } from '../validators/userSchema.js';
 
 export class UserService {
 
@@ -65,5 +65,10 @@ export class UserService {
       throw new Error('User not found');
     }
     return user;
+  }
+
+  static async deleteUser(requester: any, input: DeleteUserInput) {
+    await UserService.requesterIsOwner(requester, input);
+    await UserModel.deleteUser({ id: input.id });
   }
 }

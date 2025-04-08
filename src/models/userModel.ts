@@ -192,10 +192,10 @@ export class UserModel {
     }
   }
 
-  static async deleteUser({ id, email }: any) {
+  static async deleteUser({ id }: any) {
     try {
       await prisma.user.delete({
-        where: { id, email }
+        where: { id }
       });
     } catch {
       throw new Error('Error eliminando usuario');

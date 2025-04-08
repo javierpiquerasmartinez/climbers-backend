@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import cloudinary from '../lib/cloudinary.js';
 import { UserModel } from '../models/userModel.js';
 import { UserService } from '../services/userService.js'
+import { AvatarService } from '../services/avatarService.js';
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -59,17 +60,8 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 }
 
 export const deleteUser = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  let email = req.user?.email;
-
-  // Seguridad: asegurarse de que el usuario es dueño de la cuenta
-  if (!email) {
-    res.status(401).json({ error: 'No autorizado' });
-    return
-  }
-
   try {
-    await UserModel.deleteUser({ ...req.params, email })
+    await UserService.deleteUser(req.user, { id: req.params.id })
     res.status(204).send(); // Sin contenido
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar usuario' });
@@ -86,26 +78,8 @@ export const updateAvatar = async (req: Request, res: Response) => {
   }
 
   try {
-    const streamUpload = () =>
-      new Promise<string>((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          {
-            folder: 'climbers/avatars',
-            public_id: `user-${id}`,
-            overwrite: true
-          },
-          (error, result) => {
-            if (error || !result) return reject(error || new Error('Error en Cloudinary'));
-            resolve(result.secure_url);
-          }
-        );
-        stream.end(file.buffer);
-      });
-
-    const avatarUrl = await streamUpload();
-
+    const avatarUrl = await AvatarService.uploadAvatar(req.user, { userId: id, file });
     await UserService.updateUserAvatarUrl(req.user, id, avatarUrl);
-
     res.status(200).json({ avatarUrl });
   } catch (err) {
     console.error('Error al subir avatar:', err);

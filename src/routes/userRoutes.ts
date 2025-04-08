@@ -3,7 +3,7 @@ import { createUser, updateUser, getUsersWithFilters, getUserConversations, getU
 import { verifyGoogleToken } from '../middlewares/verifyGoogleToken.js';
 import { upload } from '../middlewares/upload.js';
 import { validateBody, validateParams } from '../middlewares/validate.js';
-import { createUserSchema, updateUserSchema, userConversationsRequestSchema, userFiltersSchema, userProfileRequestSchema } from '../validators/userSchema.js';
+import { createUserSchema, updateUserSchema, userConversationsRequestSchema, userFiltersSchema, userProfileRequestSchema, deleteUserSchema, updateAvatarSchema } from '../validators/userSchema.js';
 
 const router = Router();
 
@@ -13,7 +13,7 @@ router.get('/', verifyGoogleToken, validateBody(userFiltersSchema), getUsersWith
 router.get('/:id/conversations', verifyGoogleToken, validateParams(userConversationsRequestSchema), getUserConversations);
 router.get('/me', verifyGoogleToken, getCurrentUser);
 router.get('/:id', verifyGoogleToken, validateParams(userProfileRequestSchema), getUserProfile);
-router.delete('/:id', verifyGoogleToken, deleteUser);
-router.post('/:id/avatar', verifyGoogleToken, upload.single('avatar'), updateAvatar);
+router.delete('/:id', verifyGoogleToken, validateParams(deleteUserSchema), deleteUser);
+router.post('/:id/avatar', verifyGoogleToken, validateParams(updateAvatarSchema), upload.single('avatar'), updateAvatar);
 
 export default router;

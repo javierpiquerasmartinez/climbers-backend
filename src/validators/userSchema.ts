@@ -34,8 +34,18 @@ export const userProfileRequestSchema = z.object({
   id: z.string()
 });
 
+export const deleteUserSchema = z.object({
+  id: z.string()
+});
+
+export const updateAvatarSchema = z.object({
+  id: z.string()
+});
+
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 export type UserFiltersInput = z.infer<typeof userFiltersSchema>;
 export type UserConversationsInput = z.infer<typeof userConversationsRequestSchema>;
 export type UserProfileInput = z.infer<typeof userProfileRequestSchema>;
+export type DeleteUserInput = z.infer<typeof deleteUserSchema>;
+export type UpdateAvatarInput = z.infer<typeof updateAvatarSchema>;
