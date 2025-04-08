@@ -50,4 +50,12 @@ export class UserService {
     await UserService.requesterIsOwner(requester, input);
     return await UserModel.getUserConversations({ id: input.id });
   };
+
+  static async getCurrentUser(requester: any) {
+    const email = requester?.email;
+    if (!email) {
+      throw new Error('Unauthorized');
+    }
+    return await UserModel.getCurrentUser({ email: requester.email });
+  }
 }

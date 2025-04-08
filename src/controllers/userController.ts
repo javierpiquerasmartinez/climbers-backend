@@ -50,16 +50,8 @@ export const getUserProfile = async (req: Request, res: Response) => {
 };
 
 export const getCurrentUser = async (req: Request, res: Response) => {
-
-  const email = req.user?.email;
-
-  if (!email) {
-    res.status(401).json({ error: 'No autenticado' });
-    return
-  }
-
   try {
-    const user = await UserModel.getCurrentUser({ email });
+    const user = await UserService.getCurrentUser(req.user);
     res.json(user)
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
