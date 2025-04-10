@@ -1,4 +1,5 @@
 import prisma from "../prisma/client";
+import { errors } from "../utils/errors";
 
 export class FavoriteModel {
 
@@ -12,7 +13,8 @@ export class FavoriteModel {
       })
       return favorite;
     } catch (error) {
-      throw new Error("Error adding favorite");
+      console.log(error)
+      throw errors.internal("Error adding favorite");
     }
   }
 
@@ -28,7 +30,7 @@ export class FavoriteModel {
       })
       return favorite;
     } catch (error) {
-      throw new Error("Error removing favorite");
+      throw errors.internal("Error removing favorite");
     }
   }
 
@@ -48,7 +50,7 @@ export class FavoriteModel {
       });
       return favorites;
     } catch (error) {
-      throw new Error("Error getting favorites");
+      throw errors.internal("Error getting favorites");
     }
   }
 }

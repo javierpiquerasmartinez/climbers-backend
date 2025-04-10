@@ -7,21 +7,11 @@ export const addFavorite = async (req: Request, res: Response) => {
 };
 
 export const removeFavorite = async (req: Request, res: Response) => {
-  try {
-    await FavoriteService.removeFavorite(req.user, { favoriteId: req.params.favoriteId });
-    res.status(201).json({ success: true, message: 'Favorito añadido' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Error al eliminar favorito' });
-  }
+  await FavoriteService.removeFavorite(req.user, { favoriteId: req.params.favoriteId });
+  res.status(201).json({ success: true, message: 'Favorito añadido' });
 };
 
 export const getFavorites = async (req: Request, res: Response) => {
-  try {
-    const favorites = await FavoriteService.getFavorites(req.user);
-    res.json(favorites);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Error al obtener favoritos' });
-  }
+  const favorites = await FavoriteService.getFavorites(req.user);
+  res.json(favorites);
 };

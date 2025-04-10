@@ -8,7 +8,7 @@ import { catchAsync } from '../utils/catchAsync.js';
 const router = Router();
 
 router.get('/', verifyGoogleToken, catchAsync(getFavorites));
-router.post('/:favoriteId', validateParams(favoriteSchema), verifyGoogleToken, addFavorite);
-router.delete('/:favoriteId', validateParams(favoriteSchema), removeFavorite);
+router.post('/:favoriteId', validateParams(favoriteSchema), verifyGoogleToken, catchAsync(addFavorite));
+router.delete('/:favoriteId', validateParams(favoriteSchema), verifyGoogleToken, catchAsync(removeFavorite));
 
 export default router;
