@@ -225,7 +225,7 @@ export class UserModel {
       });
       return user;
     } catch (err) {
-      throw new Error('Error finding user by email');
+      throw errors.internal('Error finding user by email');
     }
   }
 
