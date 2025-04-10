@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import favoriteRoutes from './routes/favoriteRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { devLogger } from './middlewares/devLogger.js';
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/favorites', favoriteRoutes);
 
 app.get('/', (_req, res) => {
   res.send('Climbers backend funcionando 🎯');
