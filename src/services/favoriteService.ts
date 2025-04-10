@@ -1,6 +1,6 @@
-import { FavoriteModel } from "../models/favoriteModel";
-import { UserModel } from "../models/userModel";
-import { errors } from "../utils/errors";
+import { FavoriteModel } from "../models/favoriteModel.js";
+import { UserModel } from "../models/userModel.js";
+import { errors } from "../utils/errors/index.js";
 import { FavoriteInput } from "../validators/favoriteSchema.js";
 
 export class FavoriteService {

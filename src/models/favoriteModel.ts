@@ -1,5 +1,5 @@
-import prisma from "../prisma/client";
-import { errors } from "../utils/errors";
+import prisma from "../prisma/client.js";
+import { errors } from "../utils/errors/index.js";
 
 export class FavoriteModel {
 
