@@ -31,7 +31,7 @@ export class FavoriteService {
   }
 
   static async getFavorites(requester: any) {
-    const author = await UserModel.findByEmail(requester.email);
+    const author = await UserModel.findByEmail({ email: requester.email });
     if (!author) throw new Error("User not found");
 
     const favorites = await FavoriteModel.getFavorites({ userId: author.id });
