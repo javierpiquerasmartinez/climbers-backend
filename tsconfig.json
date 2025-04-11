@@ -11,6 +11,11 @@
     "strict": true,
     "resolveJsonModule": true
   },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "ESNext"
+    }
+  },
   "include": [
     "src"
   ],
