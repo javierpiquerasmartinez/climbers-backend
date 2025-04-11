@@ -14,7 +14,6 @@ model User {
   avatarUrl       String?
   role            Role
   location        String?
-  climbingStyles  String[]
   createdAt       DateTime @default(now())
   climbingLevelId Int?
 
@@ -27,7 +26,8 @@ model User {
   favorites   Favorite[] @relation("Favoriter")
   favoritedBy Favorite[] @relation("Favorited")
 
-  level ClimbingLevel? @relation("UserClimbingLevel", fields: [climbingLevelId], references: [id])
+  climbingStyles ClimbingStyle[] @relation("UserClimbingStyles")
+  level          ClimbingLevel?  @relation("UserClimbingLevel", fields: [climbingLevelId], references: [id])
 }
 
 model Favorite {
@@ -75,6 +75,14 @@ model ClimbingLevel {
   updatedAt DateTime          @updatedAt
 }
 
+model ClimbingStyle {
+  id        Int               @id @default(autoincrement())
+  name      ClimbingStyleName @unique
+  users     User[]            @relation("UserClimbingStyles")
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
 enum Role {
   viajero
   anfitrión
@@ -87,4 +95,12 @@ enum ClimbingLevelName {
   AVANZADO
   EXPERTO
   PRO
+}
+
+enum ClimbingStyleName {
+  DEPORTIVA
+  BOULDER
+  VIA_LARGA
+  CLASICA
+  PSICOBLOC
 }
