@@ -11,4 +11,14 @@ export class ParamsModel {
       throw errors.internal("Error finding Climbing Levels");
     }
   }
+
+  static async getClimbingStyles() {
+    try {
+      const climbingLevels = prisma.climbingStyle.findMany({ orderBy: { name: 'asc' } })
+      return climbingLevels;
+    } catch (error) {
+      console.log(error)
+      throw errors.internal("Error finding Climbing Styles");
+    }
+  }
 }

@@ -6,4 +6,8 @@ export class ParamsService {
     return await ParamsModel.getClimbingLevels();
   }
 
+  static async getClimbingStyles() {
+    return await ParamsModel.getClimbingLevels();
+  }
+
 }
