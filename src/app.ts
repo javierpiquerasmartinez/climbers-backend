@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 import favoriteRoutes from './routes/favoriteRoutes.js';
+import paramsRoutes from './routes/paramsRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { devLogger } from './middlewares/devLogger.js';
 
@@ -17,6 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use(devLogger);
+
+app.use('/api/params', paramsRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
