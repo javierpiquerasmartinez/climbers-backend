@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
-  name           String
-  email          String   @unique
-  avatarUrl      String?
-  role           Role
-  location       String?
-  climbingStyles String[]
-  level          String?
-  createdAt      DateTime @default(now())
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  avatarUrl       String?
+  role            Role
+  location        String?
+  climbingStyles  String[]
+  createdAt       DateTime @default(now())
+  climbingLevelId Int?
 
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
@@ -26,6 +26,8 @@ model User {
 
   favorites   Favorite[] @relation("Favoriter")
   favoritedBy Favorite[] @relation("Favorited")
+
+  level ClimbingLevel? @relation("UserClimbingLevel", fields: [climbingLevelId], references: [id])
 }
 
 model Favorite {
@@ -65,8 +67,24 @@ model Review {
   target User @relation("ReceivedReviews", fields: [targetId], references: [id], onDelete: Cascade)
 }
 
+model ClimbingLevel {
+  id        Int               @id @default(autoincrement())
+  name      ClimbingLevelName @unique
+  users     User[]            @relation("UserClimbingLevel")
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
 enum Role {
   viajero
   anfitrión
   ambos
+}
+
+enum ClimbingLevelName {
+  PRINCIPIANTE
+  INTERMEDIO
+  AVANZADO
+  EXPERTO
+  PRO
 }
