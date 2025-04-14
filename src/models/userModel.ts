@@ -10,11 +10,13 @@ export class UserModel {
           name,
           email,
           role,
-          climbingStyles,
+          climbingStyles: {
+            connect: climbingStyles?.map((id: number) => ({ id })) // conecta con varios estilos
+          },
           location,
-          level,
+          level: level ? { connect: { id: level } } : undefined,
           avatarUrl,
-        },
+        }
       });
       return user;
     } catch (err) {
@@ -30,8 +32,29 @@ export class UserModel {
         data: {
           role,
           location,
-          climbingStyles,
-          level
+          climbingStyles: {
+            set: climbingStyles?.map((id: number) => ({ id })) || []
+          },
+          level: level
+            ? { connect: { id: level } }
+            : { disconnect: true }
+        },
+        select: {
+          id,
+          role,
+          location,
+          level: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          climbingStyles: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
         }
       });
       return user;
@@ -48,10 +71,12 @@ export class UserModel {
       filters.role = role as any;
     }
 
-    if (style && typeof style === 'string') {
+    if (style) {
       filters.climbingStyles = {
-        has: style.toLowerCase()
-      }
+        some: {
+          name: style.toUpperCase()
+        }
+      };
     }
 
     if (location && typeof location === 'string') {
@@ -61,11 +86,10 @@ export class UserModel {
       }
     }
 
-    if (level && typeof level === 'string') {
+    if (level) {
       filters.level = {
-        equals: level,
-        mode: 'insensitive'
-      }
+        name: level.toUpperCase()
+      };
     }
 
     try {
@@ -150,8 +174,18 @@ export class UserModel {
           avatarUrl: true,
           role: true,
           location: true,
-          climbingStyles: true,
-          level: true,
+          climbingStyles: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          level: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
           createdAt: true
         }
       });
