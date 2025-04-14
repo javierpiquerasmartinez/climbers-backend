@@ -214,7 +214,27 @@ export class UserModel {
   static async getCurrentUser({ email }: any) {
     try {
       const user = await prisma.user.findUnique({
-        where: { email }
+        where: { email },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatarUrl: true,
+          role: true,
+          location: true,
+          level: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          climbingStyles: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+        }
       });
 
       if (!user) {
