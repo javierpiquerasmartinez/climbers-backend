@@ -40,9 +40,12 @@ export class UserModel {
             : { disconnect: true }
         },
         select: {
-          id,
-          role,
-          location,
+          id: true,
+          name: true,
+          email: true,
+          avatarUrl: true,
+          role: true,
+          location: true,
           level: {
             select: {
               id: true,
@@ -54,12 +57,13 @@ export class UserModel {
               id: true,
               name: true
             }
-          }
+          },
         }
       });
       return user;
     }
     catch (err) {
+      console.log(err)
       throw new Error('Error updating user');
     }
   }
