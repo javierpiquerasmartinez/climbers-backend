@@ -21,6 +21,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImM3ZTA0NDY1NjQ5ZmZhNjA2NTU3Nj
 
 {
   "role": "viajero",
-  "climbingStyles": [1],
-  "level": 2
+  "climbingStyles": [1,3],
+  "location":"Valencia",
+  "level": 5
 }
