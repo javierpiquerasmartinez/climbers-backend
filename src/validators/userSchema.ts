@@ -14,9 +14,9 @@ export const createUserSchema = z.object({
 export const updateUserSchema = z.object({
   id: z.string().optional(),
   role: z.enum(['anfitrión', 'viajero', 'ambos']).optional(),
-  climbingStyles: z.array(z.string()).optional(),
+  climbingStyles: z.array(z.number()).optional(),
   location: z.string().optional(),
-  level: z.string().optional()
+  level: z.number().optional()
 });
 
 export const userFiltersSchema = z.object({
