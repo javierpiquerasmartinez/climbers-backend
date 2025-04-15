@@ -19,7 +19,8 @@ export const updateUserSchema = z.object({
   location: z.string().optional(),
   level: z.number().optional(),
   equipmentAvailable: z.array(z.number()).optional(),
-  languages: z.array(z.number()).optional()
+  languages: z.array(z.number()).optional(),
+  bio: z.string().optional()
 });
 
 export const userFiltersSchema = z.object({

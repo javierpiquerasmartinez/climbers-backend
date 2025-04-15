@@ -25,11 +25,12 @@ export class UserModel {
     }
   }
 
-  static async updateUser({ id, role, location, climbingStyles, level, equipmentAvailable, languages }: any) {
+  static async updateUser({ id, role, location, climbingStyles, level, equipmentAvailable, languages, bio }: any) {
     try {
       const user = await prisma.user.update({
         where: { id },
         data: {
+          bio,
           role,
           location,
           climbingStyles: {
