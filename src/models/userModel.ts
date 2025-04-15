@@ -219,13 +219,7 @@ export class UserModel {
     try {
       const user = await prisma.user.findUnique({
         where: { email },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          avatarUrl: true,
-          role: true,
-          location: true,
+        include: {
           level: {
             select: {
               id: true,
@@ -237,7 +231,7 @@ export class UserModel {
               id: true,
               name: true
             }
-          },
+          }
         }
       });
 
