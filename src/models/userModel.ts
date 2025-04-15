@@ -261,6 +261,18 @@ export class UserModel {
               id: true,
               name: true
             }
+          },
+          equipmentAvailable: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          languages: {
+            select: {
+              id: true,
+              name: true
+            }
           }
         }
       });
