@@ -1,7 +1,34 @@
 import { PrismaClient, ClimbingLevelName, ClimbingStyleName } from '@prisma/client';
 
-
 const prisma = new PrismaClient();
+
+async function seedLanguages() {
+  const languages: string[] = ['Español', 'Inglés', 'Francés', 'Alemán'];
+
+  for (const name of languages) {
+    await prisma.languages.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+
+  console.log('Languages seeded!');
+}
+
+async function seedEquipment() {
+  const equipment: string[] = ['Cuerda', 'Casco', 'Friends', 'Cintas express', 'Crashpad'];
+
+  for (const name of equipment) {
+    await prisma.equipment.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+
+  console.log('Equipment seeded!');
+}
 
 async function seedClimbingStyles() {
   const styles: ClimbingStyleName[] = [
@@ -44,8 +71,10 @@ async function seedClimbingLevels() {
 }
 
 async function main() {
-  await seedClimbingLevels();
-  await seedClimbingStyles();
+  //await seedClimbingLevels();
+  //await seedClimbingStyles();
+  await seedEquipment();
+  await seedLanguages();
 }
 
 main()
