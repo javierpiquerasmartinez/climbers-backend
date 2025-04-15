@@ -210,7 +210,8 @@ export class UserModel {
           languages: {
             select: {
               id: true,
-              name: true
+              name: true,
+              flag: true
             }
           },
           equipmentAvailable: {
