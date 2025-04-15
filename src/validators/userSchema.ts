@@ -21,9 +21,10 @@ export const updateUserSchema = z.object({
 
 export const userFiltersSchema = z.object({
   role: z.enum(['anfitrión', 'viajero', 'ambos']).optional(),
-  style: z.array(z.string()).optional(),
+  style: z.string().optional().transform(val => Number(val)),
+  level: z.string().optional().transform(val => Number(val)),
   location: z.string().optional(),
-  level: z.string().optional()
+
 });
 
 export const userConversationsRequestSchema = z.object({
