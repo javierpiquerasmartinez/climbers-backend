@@ -21,7 +21,7 @@ export const updateUser = async (req: Request, res: Response) => {
 }
 
 export const getUsersWithFilters = async (req: Request, res: Response) => {
-  const users = await UserService.getUserWithFilters(req.query);
+  const users = await UserService.getUserWithFilters(req.query as any);
   res.json(users);
 }
 
