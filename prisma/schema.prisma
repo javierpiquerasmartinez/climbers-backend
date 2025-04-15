@@ -8,14 +8,18 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid())
-  name            String
-  email           String   @unique
-  avatarUrl       String?
-  role            Role
-  location        String?
-  createdAt       DateTime @default(now())
-  climbingLevelId Int?
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  avatarUrl        String?
+  role             Role
+  location         String?
+  createdAt        DateTime @default(now())
+  climbingLevelId  Int?
+  bio              String?
+  instagramUrl     String?
+  availabilityNote String?
+  favoriteCrag     String?
 
   sentMessages     Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
@@ -26,8 +30,10 @@ model User {
   favorites   Favorite[] @relation("Favoriter")
   favoritedBy Favorite[] @relation("Favorited")
 
-  climbingStyles ClimbingStyle[] @relation("UserClimbingStyles")
-  level          ClimbingLevel?  @relation("UserClimbingLevel", fields: [climbingLevelId], references: [id])
+  climbingStyles     ClimbingStyle[] @relation("UserClimbingStyles")
+  languages          Languages[]     @relation("UserLanguages")
+  equipmentAvailable Equipment[]     @relation("UserEquipmentAvailable")
+  level              ClimbingLevel?  @relation("UserClimbingLevel", fields: [climbingLevelId], references: [id])
 }
 
 model Favorite {
@@ -81,6 +87,22 @@ model ClimbingStyle {
   users     User[]            @relation("UserClimbingStyles")
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
+}
+
+model Languages {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  users     User[]   @relation("UserLanguages")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Equipment {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  users     User[]   @relation("UserEquipmentAvailable")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
