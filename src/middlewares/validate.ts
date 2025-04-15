@@ -18,7 +18,7 @@ export const validateParams = (schema: ZodSchema) =>
     if (!result.success) {
       throw errors.badRequest('Datos inválidos', result.error.format())
     }
-    req.body = result.data;
+    req.params = result.data;
     next();
   }
 
@@ -28,6 +28,6 @@ export const validateQuery = (schema: ZodSchema) =>
     if (!result.success) {
       throw errors.badRequest('Datos inválidos', result.error.format())
     }
-    req.body = result.data;
+    req.query = result.data;
     next();
   }
