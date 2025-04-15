@@ -193,6 +193,8 @@ export class UserModel {
           avatarUrl: true,
           role: true,
           location: true,
+          instagramUrl: true,
+          bio: true,
           climbingStyles: {
             select: {
               id: true,
@@ -200,6 +202,18 @@ export class UserModel {
             }
           },
           level: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          languages: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          equipmentAvailable: {
             select: {
               id: true,
               name: true
