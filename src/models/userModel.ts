@@ -78,7 +78,7 @@ export class UserModel {
     if (style) {
       filters.climbingStyles = {
         some: {
-          name: style.toUpperCase()
+          id: style
         }
       };
     }
@@ -92,18 +92,33 @@ export class UserModel {
 
     if (level) {
       filters.level = {
-        name: level.toUpperCase()
+        id: level
       };
     }
 
     try {
 
       const users = await prisma.user.findMany({
-        where: filters
+        where: filters,
+        include: {
+          level: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          climbingStyles: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
       })
 
       return users;
     } catch (err) {
+      console.log(err)
       throw errors.internal('Error getting users with filters');
     }
 
