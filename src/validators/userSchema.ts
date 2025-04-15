@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { getEquipment } from '../controllers/paramsController';
 
 export const createUserSchema = z.object({
   id: z.string().optional(),
@@ -16,7 +17,9 @@ export const updateUserSchema = z.object({
   role: z.enum(['anfitrión', 'viajero', 'ambos']).optional(),
   climbingStyles: z.array(z.number()).optional(),
   location: z.string().optional(),
-  level: z.number().optional()
+  level: z.number().optional(),
+  equipmentAvailable: z.array(z.number()).optional(),
+  languages: z.array(z.number()).optional()
 });
 
 export const userFiltersSchema = z.object({

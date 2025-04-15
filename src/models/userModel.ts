@@ -25,7 +25,7 @@ export class UserModel {
     }
   }
 
-  static async updateUser({ id, role, location, climbingStyles, level }: any) {
+  static async updateUser({ id, role, location, climbingStyles, level, equipmentAvailable, languages }: any) {
     try {
       const user = await prisma.user.update({
         where: { id },
@@ -35,29 +35,35 @@ export class UserModel {
           climbingStyles: {
             set: climbingStyles?.map((id: number) => ({ id })) || []
           },
+          equipmentAvailable: {
+            set: equipmentAvailable?.map((id: number) => ({ id })) || []
+          },
+          languages: {
+            set: languages?.map((id: number) => ({ id })) || []
+          },
           level: level
             ? { connect: { id: level } }
             : { disconnect: true }
         },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          avatarUrl: true,
-          role: true,
-          location: true,
-          level: {
-            select: {
-              id: true,
-              name: true
-            }
-          },
+        include: {
           climbingStyles: {
             select: {
               id: true,
               name: true
             }
           },
+          equipmentAvailable: {
+            select: {
+              id: true,
+              name: true
+            }
+          },
+          languages: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
         }
       });
       return user;
