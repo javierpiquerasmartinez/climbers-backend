@@ -92,6 +92,7 @@ model ClimbingStyle {
 model Languages {
   id        Int      @id @default(autoincrement())
   name      String   @unique
+  flag      String?
   users     User[]   @relation("UserLanguages")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
