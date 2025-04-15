@@ -22,15 +22,37 @@ export class ParamsModel {
     }
   }
 
+  static async getLanguages() {
+    try {
+      const languages = prisma.languages.findMany({ orderBy: { name: 'asc' } })
+      return languages;
+    } catch (error) {
+      throw errors.internal("Error finding Languages");
+    }
+  }
+
+  static async getEquipment() {
+    try {
+      const equipment = prisma.equipment.findMany({ orderBy: { name: 'asc' } })
+      return equipment;
+    } catch (error) {
+      throw errors.internal("Error finding Equipment");
+    }
+  }
+
   static async getAllParams() {
     try {
-      const [climbingStyles, climbingLevels] = await Promise.all([
+      const [climbingStyles, climbingLevels, languages, equipment] = await Promise.all([
         prisma.climbingStyle.findMany({ orderBy: { name: 'asc' } }),
         prisma.climbingLevel.findMany({ orderBy: { name: 'asc' } }),
+        prisma.languages.findMany({ orderBy: { name: 'asc' } }),
+        prisma.equipment.findMany({ orderBy: { name: 'asc' } }),
       ]);
       return {
         climbingStyles: climbingStyles,
-        climbingLevels: climbingLevels
+        climbingLevels: climbingLevels,
+        equipment: equipment,
+        languages: languages
       }
     } catch (error) {
       console.log(error)

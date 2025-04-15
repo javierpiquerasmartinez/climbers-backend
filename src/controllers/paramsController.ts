@@ -11,6 +11,16 @@ export const getClimbingStyles = async (req: Request, res: Response) => {
   res.status(201).json(climbingStyles);
 };
 
+export const getEquipment = async (req: Request, res: Response) => {
+  const equipment = await ParamsService.getEquipment()
+  res.status(201).json(equipment);
+};
+
+export const getLanguages = async (req: Request, res: Response) => {
+  const languages = await ParamsService.getLanguages()
+  res.status(201).json(languages);
+};
+
 export const getAllParams = async (req: Request, res: Response) => {
   const climbingStyles = await ParamsService.getAllParams()
   res.status(201).json(climbingStyles);

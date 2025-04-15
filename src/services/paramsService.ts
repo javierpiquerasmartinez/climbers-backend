@@ -10,6 +10,14 @@ export class ParamsService {
     return await ParamsModel.getClimbingStyles();
   }
 
+  static async getEquipment() {
+    return await ParamsModel.getEquipment();
+  }
+
+  static async getLanguages() {
+    return await ParamsModel.getLanguages();
+  }
+
   static async getAllParams() {
     return await ParamsModel.getAllParams();
   }
